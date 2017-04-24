@@ -23,9 +23,14 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import whitaker.anthony.funshine.R;
+import whitaker.anthony.funshine.model.DailyWeatherReport;
 
 public class WeatherActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -38,6 +43,7 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
     private static final String URL_UNITS = "&units=imperial";
 
     private GoogleApiClient googleApiClient;
+    private ArrayList<DailyWeatherReport> reports = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +66,22 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
         final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.v(LOG_TAG, "Response: " + response.toString());
+                try {
+                    JSONObject city = response.getJSONObject("city");
+                    String cityName = city.getString("name");
+                    String country = city.getString("country");
+
+                    JSONArray list = response.getJSONArray("list");
+                    for(int i=0; i<5; i++) {
+                        JSONObject object = list.getJSONObject(i);
+                        DailyWeatherReport report = DailyWeatherReport.newInstance(cityName, country, object);
+                        reports.add(report);
+                    }
+
+                    Log.v("JSON", "Name: " + cityName + " - Country: " + country);
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, "Error:" + e.getLocalizedMessage());
+                }
             }
         }, new Response.ErrorListener() {
             @Override

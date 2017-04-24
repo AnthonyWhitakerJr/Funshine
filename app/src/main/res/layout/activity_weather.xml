@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="whitaker.anthony.funshine.WeatherActivity">
+    tools:context="whitaker.anthony.funshine.activity.WeatherActivity">
 
     <TextView
         android:layout_width="wrap_content"

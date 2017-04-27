@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,7 +29,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import whitaker.anthony.funshine.R;
 import whitaker.anthony.funshine.model.DailyWeatherReport;
@@ -45,10 +50,28 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
     private GoogleApiClient googleApiClient;
     private ArrayList<DailyWeatherReport> reports = new ArrayList<>();
 
+    private ImageView weatherIcon;
+    private ImageView weatherIconMini;
+    private TextView weatherDate;
+    private TextView currentTemp;
+    private TextView highTemp;
+    private TextView lowTemp;
+    private TextView cityCountry;
+    private TextView weatherDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+
+        weatherIcon = (ImageView)findViewById(R.id.weatherIcon);
+        weatherIconMini = (ImageView)findViewById(R.id.weatherIconMini);
+        weatherDate = (TextView)findViewById(R.id.weatherDate);
+        currentTemp = (TextView)findViewById(R.id.currentTemp);
+        lowTemp = (TextView)findViewById(R.id.lowTemp);
+        highTemp = (TextView)findViewById(R.id.highTemp);
+        cityCountry = (TextView)findViewById(R.id.cityCountry);
+        weatherDescription = (TextView)findViewById(R.id.weatherDescription);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -82,6 +105,8 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, "Error:" + e.getLocalizedMessage());
                 }
+
+                updateUI();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -91,6 +116,23 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
         });
 
         Volley.newRequestQueue(this).add(jsonRequest);
+    }
+
+    public void updateUI() {
+        if(!reports.isEmpty()) {
+            DailyWeatherReport report = reports.get(0);
+            weatherIcon.setImageDrawable(getResources().getDrawable(report.getWeather().getIconId()));
+            weatherIconMini.setImageDrawable(getResources().getDrawable(report.getWeather().getMiniIconId()));
+
+            DateFormat format = new SimpleDateFormat("MMM, dd", Locale.getDefault());
+            weatherDate.setText("Today, " + format.format(report.getDate()));
+
+            currentTemp.setText(String.format(Locale.ENGLISH, "%d", report.getCurrentTemp()));
+            highTemp.setText(String.format(Locale.ENGLISH, "%d", report.getMaxTemp()));
+            lowTemp.setText(String.format(Locale.ENGLISH, "%d", report.getMinTemp()));
+            cityCountry.setText(report.getCityName() + ", " + report.getCountry());
+            weatherDescription.setText(report.getWeather().getText());
+        }
     }
 
     static String getUrlForCoordinates(double latitude, double longitude) {

@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import whitaker.anthony.funshine.R;
+
 /**
  * @author Anthony Whitaker.
  */
@@ -20,12 +22,20 @@ public class DailyWeatherReport {
     private static final String LOG_TAG = DailyWeatherReport.class.getSimpleName();
 
     public enum WeatherType {
-        CLOUDS("Clouds"), CLEAR("Clear"), RAIN("Rain"), WIND("Wind"), SNOW("Snow");
+        CLOUDS("Clouds", R.drawable.cloudy, R.drawable.cloudy_mini),
+        CLEAR("Clear", R.drawable.sunny, R.drawable.sunny_mini),
+        RAIN("Rain", R.drawable.rainy, R.drawable.rainy_mini),
+//        WIND("Wind", R.drawable.partially_cloudy, R.drawable.partially_cloudy_mini),
+        SNOW("Snow", R.drawable.snow, R.drawable.snow_mini);
 
         private String text;
+        private int iconId;
+        private int miniIconId;
 
-        WeatherType(String text) {
+        WeatherType(String text, int iconId, int miniIconId) {
             this.text = text;
+            this.iconId = iconId;
+            this.miniIconId = miniIconId;
         }
 
         public static WeatherType fromString(String text) {
@@ -34,7 +44,19 @@ public class DailyWeatherReport {
                     return weatherType;
                 }
             }
-            return null;
+            return CLEAR;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public int getIconId() {
+            return iconId;
+        }
+
+        public int getMiniIconId() {
+            return miniIconId;
         }
     }
 

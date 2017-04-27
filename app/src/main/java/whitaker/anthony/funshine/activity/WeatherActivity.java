@@ -46,8 +46,8 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
 
     private static final String LOG_TAG = WeatherActivity.class.getSimpleName();
     public static final int PERMISSION_LOCATION_REQUEST_CODE = 111;
-    private static final String URL_BASE ="HTTP://api.openweathermap.org/data/2.5/forecast";
-    private static final String URL_PREFIX_LAT = "?lat=";
+    private static final String URL_BASE ="HTTP://api.openweathermap.org/data/2.5/forecast/daily?";
+    private static final String URL_PREFIX_LAT = "lat=";
     private static final String URL_PREFIX_LONG = "&lon=";
     private static final String URL_API_KEY = "&APPID=e336da790e585d214604883c92e1731c";
     private static final String URL_UNITS = "&units=imperial";

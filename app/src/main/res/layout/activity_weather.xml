@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@color/colorAppBackground"
     tools:context="whitaker.anthony.funshine.activity.WeatherActivity">
 
     <ImageView
@@ -40,14 +40,13 @@
         android:id="@+id/guideline"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.1"
-        tools:layout_editor_absoluteY="96dp"
+        tools:layout_editor_absoluteY="89dp"
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/weatherDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:text="Today, May 1"
@@ -72,7 +71,6 @@
         android:id="@+id/lowTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:text="64°"
         android:textColor="@android:color/white"
@@ -85,8 +83,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginStart="0dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/currentTemp"
         app:layout_constraintHorizontal_bias="1.0"
@@ -101,26 +98,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:layout_marginLeft="0dp"
         android:text="Portland, USA"
         android:textColor="@android:color/white"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintLeft_toLeftOf="@+id/currentTemp"
-        app:layout_constraintRight_toLeftOf="@+id/guideline2"
-        android:layout_marginRight="0dp" />
+        app:layout_constraintRight_toLeftOf="@+id/guideline2" />
 
     <TextView
         android:id="@+id/weatherDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
         android:text="Clear"
         android:textColor="@android:color/white"
         android:textSize="36sp"
-        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintLeft_toLeftOf="@+id/weatherIcon"
         app:layout_constraintRight_toRightOf="@+id/weatherIcon"
         app:layout_constraintTop_toTopOf="@+id/cityCountry" />
@@ -147,10 +138,21 @@
         android:textColor="@android:color/white"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="@+id/currentTemp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toTopOf="@+id/lowTemp"
-        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
         app:layout_constraintVertical_bias="1.0"
         app:layout_constraintLeft_toLeftOf="@+id/lowTemp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contentWeatherReports"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 </android.support.constraint.ConstraintLayout>

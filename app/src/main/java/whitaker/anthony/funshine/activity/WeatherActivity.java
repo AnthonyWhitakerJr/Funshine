@@ -9,7 +9,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +64,8 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
     private TextView cityCountry;
     private TextView weatherDescription;
 
+    WeatherAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +79,16 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
         highTemp = (TextView)findViewById(R.id.highTemp);
         cityCountry = (TextView)findViewById(R.id.cityCountry);
         weatherDescription = (TextView)findViewById(R.id.weatherDescription);
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.contentWeatherReports);
+
+        adapter = new WeatherAdapter(reports);
+
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        recyclerView.setLayoutManager(layoutManager);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -107,6 +124,7 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
                 }
 
                 updateUI();
+                adapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -192,6 +210,62 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
                     Toast.makeText(this, "No permission = app no workie. You broked da codez!", Toast.LENGTH_SHORT).show();
                 }
                 break;
+        }
+    }
+
+    public class WeatherAdapter extends RecyclerView.Adapter<WeatherReportViewHolder> {
+
+        private ArrayList<DailyWeatherReport> reports;
+
+        public WeatherAdapter(ArrayList<DailyWeatherReport> reports) {
+            this.reports = reports;
+        }
+
+        @Override
+        public WeatherReportViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View card = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_weather, parent, false);
+            return new WeatherReportViewHolder(card);
+        }
+
+        @Override
+        public void onBindViewHolder(WeatherReportViewHolder holder, int position) {
+            DailyWeatherReport report = reports.get(position);
+            holder.updateUI(report);
+        }
+
+        @Override
+        public int getItemCount() {
+            return reports.size();
+        }
+    }
+
+    public class WeatherReportViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView icon;
+        private TextView date;
+        private TextView description;
+        private TextView tempHigh;
+        private TextView tempLow;
+
+        public WeatherReportViewHolder(View itemView) {
+            super(itemView);
+
+            icon = (ImageView)itemView.findViewById(R.id.cardIcon);
+            date = (TextView)itemView.findViewById(R.id.cardDay);
+            description = (TextView)itemView.findViewById(R.id.cardDescription);
+            tempHigh = (TextView)itemView.findViewById(R.id.cardTempHigh);
+            tempLow = (TextView)itemView.findViewById(R.id.cardTempLow);
+        }
+
+        public void updateUI(DailyWeatherReport report) {
+            icon.setImageDrawable(getResources().getDrawable(report.getWeather().getMiniIconId()));
+
+            DateFormat format = new SimpleDateFormat("EEEE", Locale.getDefault());
+            date.setText(format.format(report.getDate()));
+
+            tempHigh.setText(String.format(Locale.ENGLISH, "%d", report.getMaxTemp()));
+            tempLow.setText(String.format(Locale.ENGLISH, "%d", report.getMinTemp()));
+            description.setText(report.getWeather().getText());
         }
     }
 }
